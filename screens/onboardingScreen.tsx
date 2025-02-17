@@ -31,7 +31,7 @@ export const OnboardingScreen = () => {
   const handleFinish = async () => {
     try {
       await AsyncStorage.setItem('is_onboarded', 'true');
-      router.push('/(tabs)')
+      router.push('/(tabs)');
     } catch (error) {
       console.error('Error saving onboarding status:', error);
     }
