@@ -30,8 +30,8 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
         ))}
       </ScrollView>
       <Box 
-        position="absolute" 
-        bottom={380}
+        position="relative" 
+        bottom={300}
         left={0} 
         right={0} 
         flexDirection="row" 
