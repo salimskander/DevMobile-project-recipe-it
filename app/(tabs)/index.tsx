@@ -1,23 +1,20 @@
-import { useEffect } from 'react';
-import { Redirect, router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Stack } from 'expo-router';
+import { MainPageScreen } from '~/screens/mainPageScreen';
 
-export default function Index() {
-  useEffect(() => {
-    checkOnboardingStatus();
-  }, []);
-
-  const checkOnboardingStatus = async () => {
-    try {
-      const isOnboarded = await AsyncStorage.getItem('is_onboarded');
-      if (!isOnboarded) {
-        return <Redirect href="/(onboarding)" />;
-      }
-    } catch (error) {
-      console.error('Error checking onboarding status:', error);
-      return <Redirect href="/(onboarding)" />;
-    }
-  };
-
-  return null;
+export default function Home() {
+  return (
+    <>
+      <Stack.Screen options={{ title: 'Tab One' }} />
+      <View style={styles.container}>
+        <ScreenContent path="app/(tabs)/index.tsx" title="Tab One" />
+      </View>
+    </>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+  },
+});
