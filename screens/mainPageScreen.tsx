@@ -1,11 +1,10 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { Image, FlatList, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Box, Text } from 'theme';
 
 import { RecipeSections } from '~/components/RecipeSections';
-import { useRandomMeals } from '~/hooks/useRecipes';
 import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
+import { useRandomMeals } from '~/hooks/useRecipes';
 
 const Header = () => (
   <Box marginHorizontal="l_32" marginBottom="l_32" marginTop="m_16">
