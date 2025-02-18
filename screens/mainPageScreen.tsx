@@ -48,7 +48,7 @@ const Header = () => (
   </Box>
 );
 
-const SECTIONS_DATA: Section[] = [
+export const SECTIONS_DATA: Section[] = [
   {
     id: '1',
     title: 'Popular',

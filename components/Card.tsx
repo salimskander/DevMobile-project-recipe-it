@@ -19,7 +19,7 @@ export const Card = ({ title, image, width, height, subtitle, price, id }: CardP
 
   const handlePress = () => {
     router.push({
-      pathname: '/detail',
+      pathname: '/details/[id]',
       params: { id }
     });
   };
