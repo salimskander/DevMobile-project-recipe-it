@@ -1,7 +1,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, FlatList, Dimensions } from 'react-native';
+import { Image, FlatList, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Box, Text } from 'theme';
+import { useRandomMeals } from '~/hooks/useRecipes';
 
 import { Button } from '~/components/Button';
 import { RecipeSections } from '~/components/RecipeSections';
@@ -48,95 +49,46 @@ const Header = () => (
   </Box>
 );
 
-export const SECTIONS_DATA: Section[] = [
+export const SECTIONS_DATA = [
   {
     id: '1',
     title: 'Popular',
     subtitle: 'See the most popular food on order',
-    data: [
-      {
-        id: '1',
-        title: 'Pasta',
-        subtitle: 'Italian cuisine',
-        price: '15.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '2',
-        title: 'Chicken Curry',
-        subtitle: 'Indian spices',
-        price: '13.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '3',
-        title: 'Pizza',
-        subtitle: 'Neapolitan style',
-        price: '16.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-    ],
   },
   {
     id: '2',
     title: 'New Menu',
     subtitle: 'Try our new menu on the list',
-    data: [
-      {
-        id: '4',
-        title: 'Salade César',
-        subtitle: 'Fresh & healthy',
-        price: '11.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '5',
-        title: 'Sushi Roll',
-        subtitle: 'Japanese fusion',
-        price: '18.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '6',
-        title: 'Burger',
-        subtitle: 'Classic American',
-        price: '14.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-    ],
   },
   {
     id: '3',
     title: 'Recommandés pour vous',
     subtitle: 'Based on your previous order',
-    data: [
-      {
-        id: '7',
-        title: 'Ramen',
-        subtitle: 'Japanese noodles',
-        price: '12.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '8',
-        title: 'Tacos',
-        subtitle: 'Mexican street food',
-        price: '10.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-      {
-        id: '9',
-        title: 'Paella',
-        subtitle: 'Spanish seafood',
-        price: '19.99',
-        image: 'https://magazine.hortus-focus.fr/wp-content/uploads/sites/2/2021/10/poisson-penis-j-patrick-fischer-echiura-in-korea1-1200x800-1.jpg',
-      },
-    ],
   },
 ];
 
 export const MainPageScreen = () => {
   const insets = useSafeAreaInsets();
+  const { data: recipes, isLoading } = useRandomMeals(9);
+
+  if (isLoading) {
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" color="orange" />
+      </Box>
+    );
+  }
+
+  const splitRecipes = recipes ? [
+    recipes.slice(0, 3),
+    recipes.slice(3, 6),
+    recipes.slice(6, 9)
+  ] : [];
+
+  const sectionsWithData = SECTIONS_DATA.map((section, index) => ({
+    ...section,
+    recipes: splitRecipes[index] || []
+  }));
 
   return (
     <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
@@ -160,7 +112,7 @@ export const MainPageScreen = () => {
       </Box>
       <FlatList
         ListHeaderComponent={Header}
-        data={SECTIONS_DATA}
+        data={sectionsWithData}
         renderItem={({ item }) => <RecipeSections section={item} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
