@@ -6,7 +6,6 @@ import { useRandomMeals } from '~/hooks/useRecipes';
 
 import { Button } from '~/components/Button';
 import { RecipeSections } from '~/components/RecipeSections';
-import { Section } from '~/types/recipe';
 import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
 
 const Header = () => (
