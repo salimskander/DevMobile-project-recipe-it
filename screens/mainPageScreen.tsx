@@ -1,13 +1,15 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Image, FlatList, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Box, Text } from 'theme';
-
-import { RecipeSections } from '~/components/RecipeSections';
-import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
 import { useRandomMeals } from '~/hooks/useRecipes';
 
+import { Button } from '~/components/Button';
+import { RecipeSections } from '~/components/RecipeSections';
+import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
+
 const Header = () => (
-  <Box marginHorizontal="l_32" marginBottom="l_32" marginTop="m_16">
+  <Box marginBottom="l_32">
     <Text variant="title" color="black" marginBottom="ml_24">
       Lets find your best favorite food!
     </Text>
@@ -45,18 +47,20 @@ export const MainPageScreen = () => {
     );
   }
 
-  const splitRecipes = recipes
-    ? [recipes.slice(0, 3), recipes.slice(3, 6), recipes.slice(6, 9)]
-    : [];
+  const splitRecipes = recipes ? [
+    recipes.slice(0, 3),
+    recipes.slice(3, 6),
+    recipes.slice(6, 9)
+  ] : [];
 
   const sectionsWithData = SECTIONS_DATA.map((section, index) => ({
     ...section,
-    recipes: splitRecipes[index] || [],
+    recipes: splitRecipes[index] || []
   }));
 
   return (
     <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
-      <Box paddingHorizontal="l_32" paddingBottom="m_16" flexDirection="row" alignItems="center">
+      <Box paddingHorizontal="l_32" paddingBottom="l_32" flexDirection="row" alignItems="center">
         <Box width={45} height={45} borderRadius="round" overflow="hidden" marginRight="m_16">
           <Image
             source={{
