@@ -1,12 +1,19 @@
 import { FlatList, Pressable } from 'react-native';
 import { Box, Text } from 'theme';
-import { Card } from './Card';
-import { Recipe, Section } from '~/types/recipe';
+import { RecipeCard } from './RecipeCard';
+import { Recipe } from '~/types/recipe';
+
+type SectionWithRecipes = {
+  id: string;
+  title: string;
+  subtitle: string;
+  recipes: Recipe[];
+};
 
 const CARD_WIDTH = 190;
 const CARD_HEIGHT = 250;
 
-export const RecipeSections = ({ section }: { section: Section }) => {
+export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => {
   const handleSeeAll = () => {
     console.log('See all clicked for:', section.title);
   };
@@ -36,21 +43,14 @@ export const RecipeSections = ({ section }: { section: Section }) => {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={section.data}
+        data={section.recipes}
         contentContainerStyle={{ paddingHorizontal: 32 }}
         renderItem={({ item }) => (
           <Box marginRight="m_16">
-            <Card
-              title={item.title}
-              image={item.image}
-              subtitle={item.subtitle}
-              price={item.price}
-              width={CARD_WIDTH}
-              height={CARD_HEIGHT}
-            />
+            <RecipeCard recipe={item} />
           </Box>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.idMeal}
       />
     </Box>
   );

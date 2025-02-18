@@ -1,93 +1,96 @@
 import React from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Box, Text } from 'theme';
-import { Image, ScrollView, StyleSheet } from 'react-native';
+import { Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { SECTIONS_DATA } from '~/screens/mainPageScreen';
+import { useMealById } from '~/hooks/useRecipes';
 
 type DetailParams = {
   id: string;
 };
 
-// Simulons une fonction pour récupérer les données du produit
-const getProductById = (id: string) => {
-  // Référence aux données de SECTIONS_DATA
-  const allProducts = SECTIONS_DATA.flatMap(section => section.data);
-  return allProducts.find(product => product.id === id);
-};
-
 export default function DetailScreen() {
   const { id } = useLocalSearchParams<DetailParams>();
-  const product = getProductById(id);
+  const { data: recipe, isLoading } = useMealById(id);
 
-  if (!product) {
+  if (isLoading) {
     return (
       <Box flex={1} alignItems="center" justifyContent="center">
-        <Text variant="title">Produit non trouvé</Text>
+        <ActivityIndicator size="large" color="orange" />
       </Box>
     );
+  }
+
+  if (!recipe) {
+    return (
+      <Box flex={1} alignItems="center" justifyContent="center">
+        <Text variant="title">Recette non trouvée</Text>
+      </Box>
+    );
+  }
+
+  // Créer un tableau des ingrédients non-nuls
+  const ingredients = [];
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = recipe[`strIngredient${i}` as keyof typeof recipe];
+    const measure = recipe[`strMeasure${i}` as keyof typeof recipe];
+    
+    if (ingredient && ingredient.trim() !== '') {
+      ingredients.push(`${measure} ${ingredient}`);
+    }
   }
 
   return (
     <>
       <Stack.Screen 
         options={{
-          headerTitle: 'Food Detail',
+          headerTitle: recipe.strMeal,
           headerBackTitle: '',
         }} 
       />
       <ScrollView>
         <Box flex={1}>
           <Image 
-            source={{ uri: product.image }} 
+            source={{ uri: recipe.strMealThumb }} 
             style={styles.mainImage}
             resizeMode="cover"
           />
 
           <Box padding="ml_24">
             <Text variant="title" fontSize={24} marginTop="m_16">
-              {product.title}
+              {recipe.strMeal}
             </Text>
             <Text variant="body" color="gray" marginTop="xs_4">
-              {product.subtitle}
+              {recipe.strCategory} • {recipe.strArea}
             </Text>
-
-            <Box flexDirection="row" alignItems="center" marginTop="m_16">
-              <FontAwesome name="star" size={16} color="#FFD700" />
-              <Text marginLeft="xs_4">4.3 Ratings</Text>
-              <Box flexDirection="row" alignItems="center" marginLeft="l_32">
-                <FontAwesome name="comment-o" size={16} color="gray" />
-                <Text marginLeft="xs_4">980 Reviews</Text>
-              </Box>
-            </Box>
 
             <Box marginTop="l_32">
               <Text variant="title" fontSize={18}>
-                Detail & Ingredient
+                Instructions
               </Text>
               <Text 
                 variant="body" 
                 color="gray" 
                 marginTop="m_16" 
                 lineHeight={20}>
-                {`Délicieux ${product.title} à ${product.price}€. ${product.subtitle}`}
+                {recipe.strInstructions}
               </Text>
 
+              <Text variant="title" fontSize={18} marginTop="l_32">
+                Ingrédients
+              </Text>
               <Box flexDirection="row" flexWrap="wrap" marginTop="m_16">
-                <Box 
-                  padding="m_16" 
-                  borderRadius="m_6"
-                  marginRight="m_16"
-                  marginBottom="m_16">
-                  <Text>• Ingrédient 1</Text>
-                </Box>
-                <Box 
-                  padding="m_16" 
-                  borderRadius="m_6"
-                  marginRight="m_16"
-                  marginBottom="m_16">
-                  <Text>• Ingrédient 2</Text>
-                </Box>
+                {ingredients.map((ingredient, index) => (
+                  <Box 
+                    key={index}
+                    padding="m_16" 
+                    borderRadius="m_6"
+                    marginRight="m_16"
+                    marginBottom="m_16"
+                    backgroundColor="cardBackground">
+                    <Text>• {ingredient}</Text>
+                  </Box>
+                ))}
               </Box>
             </Box>
           </Box>
@@ -102,4 +105,4 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
   },
-}); 
+});
