@@ -71,6 +71,9 @@ const theme = createTheme({
       fontWeight: '600',
       textDecorationLine: 'underline',
     },
+    normal: {
+      fontSize: 16,
+    },
     defaults: {
       // We can define a default text variant here.
     },

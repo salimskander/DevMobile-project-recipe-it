@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Box, Text } from 'theme';
 import { Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useMealById } from '~/hooks/useRecipes';
+import { AntDesign } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 
 type DetailParams = {
   id: string;
@@ -12,6 +14,11 @@ type DetailParams = {
 export default function DetailScreen() {
   const { id } = useLocalSearchParams<DetailParams>();
   const { data: recipe, isLoading } = useMealById(id);
+  const [quantity, setQuantity] = useState(1);
+  
+  // Génération de nombres aléatoires pour les ratings et commentaires
+  const randomRating = (Math.random() * (5 - 4) + 4).toFixed(1);
+  const randomComments = Math.floor(Math.random() * (999 - 50) + 50);
 
   if (isLoading) {
     return (
@@ -34,56 +41,98 @@ export default function DetailScreen() {
   for (let i = 1; i <= 20; i++) {
     const ingredient = recipe[`strIngredient${i}` as keyof typeof recipe];
     const measure = recipe[`strMeasure${i}` as keyof typeof recipe];
-    
+
     if (ingredient && ingredient.trim() !== '') {
       ingredients.push(`${measure} ${ingredient}`);
     }
   }
 
+  const handleIncrement = () => setQuantity(prev => prev + 1);
+  const handleDecrement = () => setQuantity(prev => Math.max(1, prev - 1));
+
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           headerTitle: recipe.strMeal,
           headerBackTitle: '',
-        }} 
+        }}
       />
       <ScrollView>
         <Box flex={1}>
-          <Image 
-            source={{ uri: recipe.strMealThumb }} 
+          <Image
+            source={{ uri: recipe.strMealThumb }}
             style={styles.mainImage}
             resizeMode="cover"
           />
 
           <Box padding="ml_24">
-            <Text variant="title" fontSize={24} marginTop="m_16">
-              {recipe.strMeal}
-            </Text>
-            <Text variant="body" color="gray" marginTop="xs_4">
-              {recipe.strCategory} • {recipe.strArea}
-            </Text>
+            {/* Container principal titre et sélecteur */}
+            <Box flexDirection="row" justifyContent="space-between" alignItems="center">
+              <Box flex={1}>
+                <Text variant="title" fontSize={24} marginTop="m_16">
+                  {recipe.strMeal}
+                </Text>
+                <Text variant="body" color="gray" marginTop="xs_4">
+                  {recipe.strCategory} • {recipe.strArea}
+                </Text>
+                <Text variant="title" color="orange" marginTop="s_8" fontSize={20}>
+                  {(Number(recipe.price) * quantity).toFixed(2)} €
+                </Text>
+              </Box>
+              <Box 
+                flexDirection="row" 
+                alignItems="center"
+                backgroundColor="orange"
+                borderRadius="round"
+                padding="xs_4">
+                <TouchableOpacity onPress={handleDecrement}>
+                  <Box width={30} alignItems="center">
+                    <Text color="white" fontSize={20}>-</Text>
+                  </Box>
+                </TouchableOpacity>
+                <Text marginHorizontal="xs_4" fontSize={18} color="white">{quantity}</Text>
+                <TouchableOpacity onPress={handleIncrement}>
+                  <Box width={30} alignItems="center">
+                    <Text color="white" fontSize={20}>+</Text>
+                  </Box>
+                </TouchableOpacity>
+              </Box>
+            </Box>
 
-            <Box marginTop="l_32">
-              <Text variant="title" fontSize={18}>
-                Instructions
+            {/* Container ratings et comments */}
+            <Box 
+              flexDirection="row" 
+              justifyContent="space-between" 
+              marginTop="ml_24"
+              marginBottom="l_32">
+              <Box flexDirection="row" alignItems="center">
+                <AntDesign name="star" size={24} color="#FFD700" />
+                <Text marginLeft="xs_4" variant="body">{randomRating} Ratings</Text>
+              </Box>
+              <Box flexDirection="row" alignItems="center">
+                <AntDesign name="message1" size={24} color="gray" />
+                <Text marginLeft="xs_4" variant="body">{randomComments} Comments</Text>
+              </Box>
+            </Box>
+
+            {/* Reste du contenu */}
+            <Box>
+              <Text variant="title" fontSize={18} color='darkGray'>
+                Detail & Ingredient
               </Text>
-              <Text 
-                variant="body" 
-                color="gray" 
-                marginTop="m_16" 
-                lineHeight={20}>
+              <Text variant="body" color="darkGray" marginTop="m_16" lineHeight={20}>
                 {recipe.strInstructions}
               </Text>
 
-              <Text variant="title" fontSize={18} marginTop="l_32">
+              <Text variant="normal" fontSize={18} marginTop="l_32">
                 Ingrédients
               </Text>
               <Box flexDirection="row" flexWrap="wrap" marginTop="m_16">
                 {ingredients.map((ingredient, index) => (
-                  <Box 
+                  <Box
                     key={index}
-                    padding="m_16" 
+                    padding="m_16"
                     borderRadius="m_6"
                     marginRight="m_16"
                     marginBottom="m_16"

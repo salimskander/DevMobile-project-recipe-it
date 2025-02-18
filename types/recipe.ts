@@ -6,6 +6,7 @@ export interface Recipe {
   strInstructions: string;
   strMealThumb: string;
   strYoutube: string;
+  price?: string;
   [key: string]: string | null; // Pour les ingrédients dynamiques (strIngredient1, strMeasure1, etc.)
 }
 
