@@ -62,6 +62,9 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
           <Text variant="subtitle" color="gray" marginBottom="sm_12">
             {recipe.strCategory}
           </Text>
+          <Text variant="section" color="black">
+            {recipe.price} €
+          </Text>
         </Box>
         <Pressable
           style={{

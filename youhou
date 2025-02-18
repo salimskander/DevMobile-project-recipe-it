@@ -1,0 +1,7 @@
+{
+    "name": "pizza",
+    "price": 10,
+    "description": "pizza 4 fromages avec une pâte fine",
+    "image": "https://www.google.com",
+    "category": "pizza"
+}
