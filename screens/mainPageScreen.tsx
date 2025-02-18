@@ -10,7 +10,7 @@ import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
 
 const Header = () => (
   <Box marginBottom="l_32">
-    <Text variant="title" color="black" marginBottom="ml_24">
+    <Text variant="title" color="black" marginBottom="ml_24" padding="ml_24">
       Lets find your best favorite food!
     </Text>
     <SpecialOffersCarousel />
