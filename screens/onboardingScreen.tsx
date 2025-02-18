@@ -38,7 +38,7 @@ export const OnboardingScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 91, paddingBottom: insets.bottom + 16 }]}>
+    <View style={[styles.container, { paddingTop: insets.top + 91 }]}>
       <HorizontalSlider 
         items={slides}
         currentIndex={currentSlide}
@@ -48,10 +48,12 @@ export const OnboardingScreen = () => {
         <Button 
           title="Commencer" 
           onPress={handleFinish} 
-          style={{ 
-            marginHorizontal: 51,
-            marginBottom: insets.bottom
-          }} 
+          style={[
+            styles.button,
+            { 
+              marginBottom: insets.bottom + 16
+            }
+          ]} 
         />
       )}
     </View>
@@ -62,4 +64,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  button: {
+    position: 'absolute',
+    bottom: 0,
+    left: 51,
+    right: 51,
+  }
 });
