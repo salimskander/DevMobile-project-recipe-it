@@ -22,7 +22,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
       <Box
         width={190}
         height={250}
-        marginRight="m_16"
+        marginRight="xs_4"
         backgroundColor="cardBackground"
         borderRadius="l_12"
         borderWidth={2}

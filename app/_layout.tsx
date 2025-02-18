@@ -21,6 +21,8 @@ export default function RootLayout() {
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
   });
 
+  
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
