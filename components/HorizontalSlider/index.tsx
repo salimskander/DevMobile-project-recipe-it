@@ -1,6 +1,8 @@
 import React from 'react';
 import { ScrollView, Dimensions } from 'react-native';
 import { Box } from 'theme';
+
+
 import { HorizontalSliderItem, SliderItemProps } from './HorizontalSliderItem';
 
 type HorizontalSliderProps = {
@@ -19,9 +21,9 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
 
   return (
     <>
-      <ScrollView 
-        horizontal 
-        pagingEnabled 
+      <ScrollView
+        horizontal
+        pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}>
@@ -29,21 +31,21 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
           <HorizontalSliderItem key={index} {...item} />
         ))}
       </ScrollView>
-      <Box 
-        position="relative" 
+      <Box
+        position="relative"
         bottom="50%"
-        left={0} 
-        right={0} 
-        flexDirection="row" 
+        left={0}
+        right={0}
+        flexDirection="row"
         justifyContent="center"
         alignItems="center">
         {items.map((_, index) => (
-          <Box 
+          <Box
             key={index}
             width={25}
             height={currentIndex === index ? 5 : 3}
             borderRadius="s_3"
-            backgroundColor={currentIndex === index ? 'purple' : 'gray'}
+            backgroundColor={currentIndex === index ? 'orange' : 'gray'}
             margin="xs_4"
             alignSelf="center"
           />
@@ -51,4 +53,4 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
       </Box>
     </>
   );
-}; 
+};
