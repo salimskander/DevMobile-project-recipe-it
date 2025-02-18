@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CountUp } from 'use-count-up';
 import { Box, Text } from 'theme';
 
 import { HeaderDetails } from '~/components/HeaderDetails';
@@ -16,7 +17,23 @@ export default function DetailScreen() {
   const { id } = useLocalSearchParams<DetailParams>();
   const { data: recipe, isLoading } = useMealById(id);
   const [quantity, setQuantity] = useState(1);
+  const [startPrice, setStartPrice] = useState(0);
+  const [key, setKey] = useState(0);
   const insets = useSafeAreaInsets();
+
+  const currentTotal = recipe ? Number(recipe.price) * quantity : 0;
+
+  const handleIncrement = () => {
+    setStartPrice(currentTotal);
+    setQuantity((prev) => prev + 1);
+    setKey((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    setStartPrice(currentTotal);
+    setQuantity((prev) => Math.max(1, prev - 1));
+    setKey((prev) => prev + 1);
+  };
 
   if (isLoading) {
     return (
@@ -45,9 +62,6 @@ export default function DetailScreen() {
     }
   }
 
-  const handleIncrement = () => setQuantity((prev) => prev + 1);
-  const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
-
   return (
     <>
       <Stack.Screen
@@ -58,7 +72,7 @@ export default function DetailScreen() {
       <Box flex={1} style={{ paddingTop: insets.top }}>
         <HeaderDetails />
         <ScrollView>
-          <Box flex={1}>
+          <Box flex={1} style={{ paddingBottom: insets.bottom + 50 }}>
             <Image
               source={{ uri: recipe.strMealThumb }}
               style={styles.mainImage}
@@ -75,7 +89,14 @@ export default function DetailScreen() {
                     {recipe.strCategory} • {recipe.strArea}
                   </Text>
                   <Text variant="title" color="orange" marginTop="s_8" fontSize={20}>
-                    {(Number(recipe.price) * quantity).toFixed(2)} €
+                    <CountUp
+                      isCounting
+                      start={0}
+                      end={Number(recipe.price)}
+                      duration={1}
+                      decimalPlaces={2}
+                      formatter={(value) => `${value.toFixed(2)} €`}
+                    />
                   </Text>
                 </Box>
                 <Box
@@ -94,15 +115,21 @@ export default function DetailScreen() {
                   justifyContent="space-between">
                   <TouchableOpacity onPress={handleDecrement}>
                     <Box width={20} alignItems="center">
-                      <Text color="white" fontSize={20}>-</Text>
+                      <Text color="white" fontSize={20}>
+                        -
+                      </Text>
                     </Box>
                   </TouchableOpacity>
                   <Box width={20} alignItems="center">
-                    <Text color="white" fontSize={18}>{quantity}</Text>
+                    <Text color="white" fontSize={18}>
+                      {quantity}
+                    </Text>
                   </Box>
                   <TouchableOpacity onPress={handleIncrement}>
                     <Box width={20} alignItems="center">
-                      <Text color="white" fontSize={20}>+</Text>
+                      <Text color="white" fontSize={20}>
+                        +
+                      </Text>
                     </Box>
                   </TouchableOpacity>
                 </Box>
@@ -147,6 +174,48 @@ export default function DetailScreen() {
             </Box>
           </Box>
         </ScrollView>
+
+        {/* Nouveau bouton Ajouter au panier */}
+        <Box
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}
+          paddingHorizontal="xl_64"
+          style={{ paddingBottom: insets.bottom + 10 }}
+          shadowColor="black"
+          shadowOffset={{ width: 0, height: -2 }}
+          shadowOpacity={0.1}
+          shadowRadius={4}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              // Logique d'ajout au panier ici
+            }}>
+            <Box
+              backgroundColor="orange"
+              borderRadius="xl_24"
+              padding="sm_12"
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text variant="body" color="white">
+                Ajouter au panier
+              </Text>
+              <Text variant="body" color="white">
+                <CountUp
+                  key={key}
+                  isCounting
+                  start={startPrice}
+                  end={currentTotal}
+                  duration={1}
+                  decimalPlaces={2}
+                  formatter={(value) => `${value.toFixed(2)} €`}
+                />
+              </Text>
+            </Box>
+          </TouchableOpacity>
+        </Box>
       </Box>
     </>
   );
