@@ -28,7 +28,7 @@ const SPECIAL_OFFERS = [
     id: '3',
     title: 'Chef Special',
     description: 'Grilled salmon with vegetables',
-    image: 'https://www.freepnglogos.com/uploads/salmon-png/salmon-fish-png-transparent-images-download-clip-art-35.png',
+    image: 'https://static.vecteezy.com/system/resources/previews/049/664/161/non_2x/grilled-salmon-with-asparagus-and-lemon-a-delicious-and-healthy-dinner-with-transparent-background-png.png',
     colors: ['#50C878', '#2E8B57'],
   },
 ];
