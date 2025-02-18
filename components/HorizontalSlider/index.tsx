@@ -35,7 +35,8 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
         left={0} 
         right={0} 
         flexDirection="row" 
-        justifyContent="center">
+        justifyContent="center"
+        alignItems="center">
         {items.map((_, index) => (
           <Box 
             key={index}
@@ -44,6 +45,7 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
             borderRadius="s_3"
             backgroundColor={currentIndex === index ? 'purple' : 'gray'}
             margin="xs_4"
+            alignSelf="center"
           />
         ))}
       </Box>

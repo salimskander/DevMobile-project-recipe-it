@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useState } from 'react';
 import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -63,6 +63,14 @@ export const OnboardingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  title: {
+    // poppins
+    fontFamily: 'Poppins',
+  },
+  description: {
+    // monserrat
+    fontFamily: 'Monserrat'
   },
   button: {
     position: 'absolute',
