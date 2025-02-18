@@ -5,45 +5,15 @@ import { Box, Text } from 'theme';
 
 import { RecipeSections } from '~/components/RecipeSections';
 import { useRandomMeals } from '~/hooks/useRecipes';
+import { Section } from '~/types/recipe';
+import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
 
 const Header = () => (
-  <Box marginHorizontal="l_32" marginBottom="l_32">
+  <Box marginBottom="l_32">
     <Text variant="title" color="black" marginBottom="ml_24">
       Lets find your best favorite food!
     </Text>
-    <Box height={170} borderRadius="l_12" overflow="hidden">
-      <LinearGradient colors={['#D48C4A', '#EC994B']} style={{ flex: 1, flexDirection: 'row' }}>
-        <Box width="40%" height="100%">
-          <Image
-            source={{
-              uri: 'https://static.vecteezy.com/system/resources/previews/045/960/480/non_2x/noodles-in-bowl-with-chopsticks-transparent-background-free-png.png',
-            }}
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="cover"
-          />
-        </Box>
-        <Box flex={1} padding="ml_24" justifyContent="space-between">
-          <Box>
-            <Text variant="subtitle" color="white" marginBottom="s_8">
-              Special Offer
-            </Text>
-            <Text variant="body" color="white">
-              Fried noodles with special chicken katsu
-            </Text>
-          </Box>
-          <Box
-            backgroundColor="darkGray"
-            borderRadius="m_6"
-            paddingVertical="s_8"
-            paddingHorizontal="m_16"
-            alignSelf="flex-start">
-            <Text variant="buttonText" color="white">
-              Buy Now
-            </Text>
-          </Box>
-        </Box>
-      </LinearGradient>
-    </Box>
+    <SpecialOffersCarousel />
   </Box>
 );
 
