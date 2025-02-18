@@ -16,7 +16,7 @@ const palette = {
   cardBackground: '#FFFFFF',
   shadowColor: '#000000',
   background: '#FFFFFF',
-  border: '#E2E2E2',
+  border: '#F2F2F2',
 };
 
 const theme = createTheme({

@@ -7,7 +7,7 @@ import { RecipeSections } from '~/components/RecipeSections';
 import { useRandomMeals } from '~/hooks/useRecipes';
 
 const Header = () => (
-  <Box marginHorizontal="l_32" marginBottom="l_32">
+  <Box marginHorizontal="l_32" marginBottom="l_32" marginTop="m_16">
     <Text variant="title" color="black" marginBottom="ml_24">
       Lets find your best favorite food!
     </Text>
@@ -88,7 +88,7 @@ export const MainPageScreen = () => {
 
   return (
     <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
-      <Box paddingHorizontal="l_32" paddingBottom="l_32" flexDirection="row" alignItems="center">
+      <Box paddingHorizontal="l_32" paddingBottom="m_16" flexDirection="row" alignItems="center">
         <Box width={45} height={45} borderRadius="round" overflow="hidden" marginRight="m_16">
           <Image
             source={{
