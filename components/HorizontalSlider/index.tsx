@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, Dimensions } from 'react-native';
 import { Box } from 'theme';
 
+
 import { HorizontalSliderItem, SliderItemProps } from './HorizontalSliderItem';
 
 type HorizontalSliderProps = {
@@ -44,7 +45,7 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
             width={25}
             height={currentIndex === index ? 5 : 3}
             borderRadius="s_3"
-            backgroundColor={currentIndex === index ? 'purple' : 'gray'}
+            backgroundColor={currentIndex === index ? 'orange' : 'gray'}
             margin="xs_4"
             alignSelf="center"
           />
