@@ -18,7 +18,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(onboarding)" options={{ headerShown: false}} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false, gestureEnabled: false }} />
-          <Stack.Screen name="detail/[id]" />
+          <Stack.Screen name="details/[id]" />
         </Stack>
       </ThemeProvider>
     </QueryClientProvider>
