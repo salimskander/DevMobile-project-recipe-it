@@ -1,5 +1,6 @@
 import { Box, Text } from 'theme';
-import { Image, ImageSourcePropType, Dimensions } from 'react-native';
+import { Image, ImageSourcePropType, Dimensions, ImageBackground } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export type SliderItemProps = {
   title: string;
@@ -12,11 +13,36 @@ const { width } = Dimensions.get('window');
 export const HorizontalSliderItem = ({ title, description, image }: SliderItemProps) => {
   return (
     <Box width={width} alignItems="center" padding="ml_24">
-      <Image 
+      <ImageBackground 
         source={image} 
         style={{ width: width * 1, height: width * 0.9}} 
-        resizeMode="contain" 
-      />
+        resizeMode="contain"
+      >
+        {/* Gradient du haut */}
+        <LinearGradient
+          colors={['#F5F5F5', '#F5F5F5', 'rgba(245, 245, 245, 0)']}
+          locations={[0, 0.3, 1]}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            height: '40%',
+          }}
+        />
+        {/* Gradient du bas */}
+        <LinearGradient
+          colors={['rgba(245, 245, 245, 0)', '#F5F5F5', '#F5F5F5']}
+          locations={[0, 0.7, 1]}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: '40%',
+          }}
+        />
+      </ImageBackground>
       <Text variant="title" marginTop="l_32">
         {title}
       </Text>

@@ -1,10 +1,11 @@
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground } from 'react-native';
 import { useState } from 'react';
 import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from '~/components/Button';
 import { HorizontalSlider } from '~/components/HorizontalSlider';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const slides = [
   {
@@ -63,6 +64,7 @@ export const OnboardingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   title: {
     // poppins
@@ -77,5 +79,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 51,
     right: 51,
-  }
+  },
+  gradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '100%',
+  },
 });
