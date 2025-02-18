@@ -1,8 +1,10 @@
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import { TabBarIcon } from '../../components/TabBarIcon';
 
 export default function TabLayout() {
   return (
+    <>
+    <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} />
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#FF9F0A',
@@ -42,5 +44,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </>
   );
 }

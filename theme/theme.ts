@@ -45,34 +45,41 @@ const theme = createTheme({
   textVariants: {
     buttonText: {
       fontSize: 8,
-      fontWeight: 'bold',
+      fontFamily: 'Poppins-Bold',
     },
     subtitle: {
       fontSize: 12,
+      fontFamily: 'Poppins-Regular',
     },
     body: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontFamily: 'Poppins-Bold',
     },
-    title: { fontSize: 24, fontWeight: 'bold' },
+    bodyRegular: {
+      fontSize: 16,
+      fontFamily: 'Poppins-Regular',
+    },
+    title: { fontSize: 24, fontFamily: 'Poppins-Bold' },
     large: {
       fontSize: 36,
+      fontFamily: 'Poppins-Regular',
     },
     extra_large: {
       fontSize: 64,
-      fontWeight: 'bold',
+      fontFamily: 'Poppins-Bold',
     },
     section: {
       fontSize: 18,
-      fontWeight: 'bold'
+      fontFamily: 'Poppins-Bold',
     },
     seeAll: {
       fontSize: 14,
-      fontWeight: '600',
+      fontFamily: 'Poppins-Bold',
       textDecorationLine: 'underline',
     },
     normal: {
       fontSize: 16,
+      fontFamily: 'Poppins-Regular',
     },
     defaults: {
       // We can define a default text variant here.
