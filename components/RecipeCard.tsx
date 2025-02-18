@@ -34,8 +34,8 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
             style={{
               width: '100%',
               height: 150,
-              borderTopLeftRadius: 12,
-              borderTopRightRadius: 12,
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
             }}
           />
           <Pressable
