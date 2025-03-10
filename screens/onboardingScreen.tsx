@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
 
 import { Button } from '~/components/Button';
 import { HorizontalSlider } from '~/components/HorizontalSlider';
@@ -33,7 +34,31 @@ const slides = [
 
 export const OnboardingScreen = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showButton, setShowButton] = useState(false);
   const insets = useSafeAreaInsets();
+  
+  // Animation: bouton qui monte depuis le bas de l'écran
+  const buttonTranslateY = useSharedValue(100);
+  
+  useEffect(() => {
+    if (currentSlide === slides.length - 1) {
+      setShowButton(true);
+      buttonTranslateY.value = withSpring(0, { 
+        damping: 15,
+        stiffness: 100
+      });
+    } else {
+      buttonTranslateY.value = 100;
+      setShowButton(false);
+    }
+  }, [currentSlide]);
+  
+  const buttonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: buttonTranslateY.value }],
+      opacity: 1 - buttonTranslateY.value / 100,
+    };
+  });
 
   const handleFinish = async () => {
     try {
@@ -51,17 +76,16 @@ export const OnboardingScreen = () => {
         currentIndex={currentSlide}
         onSlideChange={setCurrentSlide}
       />
-      {currentSlide === slides.length - 1 && (
-        <Button
-          title="Get started"
-          onPress={handleFinish}
-          style={[
-            styles.button,
-            {
+      {showButton && (
+        <Animated.View style={[styles.buttonContainer, buttonAnimatedStyle]}>
+          <Button
+            title="Get started"
+            onPress={handleFinish}
+            style={{
               marginBottom: insets.bottom + 1,
-            },
-          ]}
-        />
+            }}
+          />
+        </Animated.View>
       )}
     </View>
   );
@@ -80,11 +104,14 @@ const styles = StyleSheet.create({
     // monserrat
     fontFamily: 'Monserrat',
   },
-  button: {
+  buttonContainer: {
     position: 'absolute',
     bottom: 0,
     left: 51,
     right: 51,
+  },
+  button: {
+    // Cette propriété est transférée à buttonContainer
   },
   gradient: {
     position: 'absolute',

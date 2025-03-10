@@ -13,6 +13,7 @@ const palette = {
   black: '#46474B',
   purple: '#6366F1',
   orange: '#EC994B',
+  lightOrange: '#F4C293',
   cardBackground: '#FFFFFF',
   shadowColor: '#000000',
   background: '#FFFFFF',

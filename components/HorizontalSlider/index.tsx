@@ -45,7 +45,7 @@ export const HorizontalSlider = ({ items, currentIndex, onSlideChange }: Horizon
             width={25}
             height={currentIndex === index ? 5 : 3}
             borderRadius="s_3"
-            backgroundColor={currentIndex === index ? 'orange' : 'gray'}
+            backgroundColor={currentIndex === index ? 'orange' : 'lightOrange'}
             margin="xs_4"
             alignSelf="center"
           />
