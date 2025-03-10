@@ -1,8 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, FlatList, ActivityIndicator } from 'react-native';
+import { Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Box, Text } from 'theme';
 import { useRandomMeals } from '~/hooks/useRecipes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 import { Button } from '~/components/Button';
 import { RecipeSections } from '~/components/RecipeSections';
@@ -38,6 +40,16 @@ export const SECTIONS_DATA = [
 export const MainPageScreen = () => {
   const insets = useSafeAreaInsets();
   const { data: recipes, isLoading } = useRandomMeals(9);
+
+  // Fonction pour réinitialiser l'onboarding
+  const resetOnboarding = async () => {
+    try {
+      await AsyncStorage.removeItem('is_onboarded');
+      router.push('/onboarding');
+    } catch (error) {
+      console.error('Error resetting onboarding status:', error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -84,6 +96,22 @@ export const MainPageScreen = () => {
         renderItem={({ item }) => <RecipeSections section={item} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <Box padding="m_16" alignItems="center" marginBottom="xl_64">
+            <TouchableOpacity
+              onPress={resetOnboarding}
+              style={{
+                backgroundColor: '#E0E0E0',
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                borderRadius: 8,
+              }}>
+              <Text variant="subtitle" color="gray">
+                Debug: Relancer l'onboarding
+              </Text>
+            </TouchableOpacity>
+          </Box>
+        }
       />
     </Box>
   );

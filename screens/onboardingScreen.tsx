@@ -62,6 +62,7 @@ export const OnboardingScreen = () => {
 
   const handleFinish = async () => {
     try {
+      // Enregistre que l'onboarding a été complété
       await AsyncStorage.setItem('is_onboarded', 'true');
       router.push('/(tabs)');
     } catch (error) {
