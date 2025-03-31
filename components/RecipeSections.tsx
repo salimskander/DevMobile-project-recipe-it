@@ -1,5 +1,7 @@
+import { router } from 'expo-router';
 import { useState, useRef } from 'react';
 import { FlatList, Pressable, Animated, TouchableOpacity } from 'react-native';
+
 import { Box, Text } from 'theme';
 import { RecipeCard } from './RecipeCard';
 import { RecipeCardSkeleton } from './SkeletonLoading';
@@ -18,14 +20,20 @@ const CARD_HEIGHT = 250;
 export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => {
   const [additionalRecipes, setAdditionalRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingIndex, setLoadingIndex] = useState(-1); // Track which index is currently loading
   const fadeAnim = useRef<Animated.Value[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { refetch } = useRandomMeals(3);
 
-  // Function to handle "See All" button
+  // Function to handle "See All" button - navigate to search page with section data
   const handleSeeAll = () => {
-    console.log('See all clicked for:', section.title);
+    // Navigate to search page and pass the section data
+    router.push({
+      pathname: '/(tabs)/search',
+      params: {
+        title: section.title,
+        subtitle: section.subtitle,
+      },
+    });
   };
 
   // Function to load more recipes with delay animation
@@ -45,16 +53,13 @@ export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => 
 
       // Add recipes one by one with animation
       for (let i = 0; i < newRecipes.length; i++) {
-        // Set the current loading index
-        setLoadingIndex(i);
-        
         // Add delay between each recipe
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Add the new recipe
-        setAdditionalRecipes(prev => {
+        setAdditionalRecipes((prev) => {
           const updatedRecipes = [...prev, newRecipes[i]];
-          
+
           // Scroll to the newly added recipe after state update
           setTimeout(() => {
             flatListRef.current?.scrollToIndex({
@@ -63,7 +68,7 @@ export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => 
               viewPosition: 0.5, // Center the item
             });
           }, 100);
-          
+
           return updatedRecipes;
         });
 
@@ -78,7 +83,6 @@ export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => 
       console.error('Error fetching more recipes:', error);
     } finally {
       setIsLoading(false);
-      setLoadingIndex(-1);
     }
   };
 
@@ -91,7 +95,7 @@ export const RecipeSections = ({ section }: { section: SectionWithRecipes }) => 
     highestMeasuredFrameIndex: number;
     averageItemLength: number;
   }) => {
-    const wait = new Promise(resolve => setTimeout(resolve, 500));
+    const wait = new Promise((resolve) => setTimeout(resolve, 500));
     wait.then(() => {
       flatListRef.current?.scrollToIndex({
         index: info.index,

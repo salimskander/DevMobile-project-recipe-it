@@ -8,15 +8,72 @@ import { Recipe } from '~/types/recipe';
 
 type RecipeCardProps = {
   recipe: Recipe;
+  vertical?: boolean; // Add vertical prop for different layout
 };
 
-export const RecipeCard = ({ recipe }: RecipeCardProps) => {
+export const RecipeCard = ({ recipe, vertical = false }: RecipeCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handlePress = () => {
     router.push(`/details/${recipe.idMeal}`);
   };
 
+  // Vertical layout for search page
+  if (vertical) {
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
+        <Box
+          width="100%"
+          height={120}
+          backgroundColor="cardBackground"
+          borderRadius="l_12"
+          borderWidth={2}
+          borderColor="border"
+          elevation={5}
+          flexDirection="row">
+          <Image
+            source={{ uri: recipe.strMealThumb }}
+            style={{
+              width: 120,
+              height: '100%',
+              borderTopLeftRadius: 10,
+              borderBottomLeftRadius: 10,
+            }}
+          />
+          <Box flex={1} padding="m_16" justifyContent="space-between">
+            <Box>
+              <Text variant="body" color="black" numberOfLines={1}>
+                {recipe.strMeal}
+              </Text>
+              <Text variant="subtitle" color="gray">
+                {recipe.strCategory}
+              </Text>
+            </Box>
+            <Box flexDirection="row" justifyContent="space-between" alignItems="center">
+              <Text variant="section" color="black">
+                {recipe.price} €
+              </Text>
+              <Pressable
+                onPress={() => setIsFavorite(!isFavorite)}
+                style={{
+                  backgroundColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: 16,
+                  padding: 6,
+                }}>
+                {isFavorite ? (
+                  <AntDesign name="heart" size={16} color="orange" />
+                ) : (
+                  <Feather name="heart" size={16} color="orange" />
+                )}
+              </Pressable>
+            </Box>
+          </Box>
+        </Box>
+      </TouchableOpacity>
+    );
+  }
+
+  // Default horizontal layout (original)
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
       <Box

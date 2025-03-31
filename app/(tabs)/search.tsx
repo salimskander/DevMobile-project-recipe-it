@@ -1,46 +1,101 @@
-import { ImageBackground } from 'react-native';
-import React from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { LayoutAnimation, Platform, UIManager } from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+
 import { Box, Text } from 'theme';
-import { Audio } from 'expo-av';
-import { useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { RecipeCard } from '~/components/RecipeCard';
+import { RecipeCardSkeleton } from '~/components/SkeletonLoading';
+import { useRandomMeals } from '~/hooks/useRecipes';
+import { Recipe } from '~/types/recipe';
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function SearchScreen() {
-  const [sound, setSound] = React.useState<Audio.Sound>();
+  const { title, subtitle } = useLocalSearchParams<{ title: string; subtitle: string }>();
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function playSound() {
-    if (sound) {
-      await sound.unloadAsync();
+  // Use the existing hook to fetch random recipes
+  const { data, isLoading: isFetching } = useRandomMeals(10);
+
+  // Add recipes one by one from the top of the list
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const addRecipesOneByOne = async () => {
+        // Reset recipes array
+        setRecipes([]);
+
+        // Add each recipe from the top by prepending to the array
+        // This will make each new recipe appear at the top of the list
+        for (let i = data.length - 1; i >= 0; i--) {
+          // Add recipe to state at the beginning of the array
+          setRecipes((current) => [data[i], ...current]);
+
+          // Wait 1 second before adding the next recipe
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+
+        setIsLoading(false);
+      };
+
+      addRecipesOneByOne();
     }
-    const { sound: newSound } = await Audio.Sound.createAsync(
-      require('~/assets/sounds/horror.mp3')
+  }, [data]);
+
+  // Display loading skeleton while loading
+  if (isLoading && isFetching) {
+    return (
+      <Box flex={1} padding="l_32" backgroundColor="white">
+        <Text variant="title" marginBottom="l_32">
+          {title || 'Search'}
+        </Text>
+        <Text variant="subtitle" marginBottom="xl_64">
+          {subtitle || 'Discover recipes'}
+        </Text>
+
+        <Animated.FlatList
+          data={[1, 2, 3, 4, 5]}
+          renderItem={() => (
+            <Box marginBottom="l_32">
+              <RecipeCardSkeleton />
+            </Box>
+          )}
+          keyExtractor={(_, index) => `skeleton-${index}`}
+        />
+      </Box>
     );
-    setSound(newSound);
-    await newSound.playAsync();
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      playSound();
-      return () => {
-        if (sound) {
-          sound.stopAsync().then(() => {
-            sound.unloadAsync();
-          });
-        }
-      };
-    }, [])
+  // Render recipe item for the FlatList
+  const renderRecipeItem = ({ item }) => (
+    <Box marginBottom="l_32">
+      <RecipeCard recipe={item} vertical />
+    </Box>
   );
 
   return (
-    <ImageBackground 
-      source={{ uri: 'https://www.shutterstock.com/image-illustration/creepy-looking-figure-smiling-dark-600nw-2348912379.jpg' }}
-      style={{ flex: 1 }}
-      resizeMode="cover"
-    >
-      <Box flex={1} alignItems="center" justifyContent="center">
-        <Text variant="title" color="white" padding="l_32">ce screen n'est pas dans la maquette</Text>
-      </Box>
-    </ImageBackground>
+    <Box flex={1} padding="l_32" backgroundColor="white">
+      <Text variant="title" marginBottom="l_32">
+        {title || 'Search'}
+      </Text>
+      <Text variant="subtitle" marginBottom="xl_64">
+        {subtitle || 'Discover recipes'}
+      </Text>
+
+      <Animated.FlatList
+        data={recipes}
+        renderItem={renderRecipeItem}
+        keyExtractor={(item) => item.idMeal}
+        showsVerticalScrollIndicator={false}
+        // Use LinearTransition for smooth item animations
+        itemLayoutAnimation={LinearTransition.duration(800)}
+        // Make space for new items animation
+        contentContainerStyle={{ paddingTop: 10 }}
+      />
+    </Box>
   );
-} 
+}
