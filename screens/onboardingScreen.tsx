@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
 
 import { Button } from '~/components/Button';
 import { HorizontalSlider } from '~/components/HorizontalSlider';
@@ -36,23 +36,23 @@ export const OnboardingScreen = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showButton, setShowButton] = useState(false);
   const insets = useSafeAreaInsets();
-  
+
   // Animation: bouton qui monte depuis le bas de l'écran
   const buttonTranslateY = useSharedValue(100);
-  
+
   useEffect(() => {
     if (currentSlide === slides.length - 1) {
       setShowButton(true);
-      buttonTranslateY.value = withSpring(0, { 
+      buttonTranslateY.value = withSpring(0, {
         damping: 15,
-        stiffness: 100
+        stiffness: 100,
       });
     } else {
       buttonTranslateY.value = 100;
       setShowButton(false);
     }
   }, [currentSlide]);
-  
+
   const buttonAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: buttonTranslateY.value }],

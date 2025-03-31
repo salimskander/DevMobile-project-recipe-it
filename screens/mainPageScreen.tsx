@@ -1,14 +1,13 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Box, Text } from 'theme';
-import { useRandomMeals } from '~/hooks/useRecipes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-
-import { Button } from '~/components/Button';
+import { useState } from 'react';
+import { Image, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Box, Text } from 'theme';
 import { RecipeSections } from '~/components/RecipeSections';
+import { MainScreenSkeleton } from '~/components/SkeletonLoading';
 import { SpecialOffersCarousel } from '~/components/SpecialOffersCarousel';
+import { useRandomMeals } from '~/hooks/useRecipes';
 
 const Header = () => (
   <Box marginBottom="l_32">
@@ -39,9 +38,17 @@ export const SECTIONS_DATA = [
 
 export const MainPageScreen = () => {
   const insets = useSafeAreaInsets();
-  const { data: recipes, isLoading } = useRandomMeals(9);
+  const [refreshing, setRefreshing] = useState(false);
+  const { data: recipes, isLoading, refetch } = useRandomMeals(9);
 
-  // Fonction pour réinitialiser l'onboarding
+  // Function to handle refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  // Function to reset onboarding
   const resetOnboarding = async () => {
     try {
       await AsyncStorage.removeItem('is_onboarded');
@@ -51,28 +58,26 @@ export const MainPageScreen = () => {
     }
   };
 
+  // Show skeleton loading during initial load
   if (isLoading) {
     return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" color="orange" />
+      <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
+        <MainScreenSkeleton />
       </Box>
     );
   }
 
-  const splitRecipes = recipes ? [
-    recipes.slice(0, 3),
-    recipes.slice(3, 6),
-    recipes.slice(6, 9)
-  ] : [];
-
+  const splitRecipes = recipes
+    ? [recipes.slice(0, 3), recipes.slice(3, 6), recipes.slice(6, 9)]
+    : [];
   const sectionsWithData = SECTIONS_DATA.map((section, index) => ({
     ...section,
-    recipes: splitRecipes[index] || []
+    recipes: splitRecipes[index] || [],
   }));
 
   return (
     <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
-      <Box paddingHorizontal="l_32" paddingBottom="l_32" flexDirection="row" alignItems="center">
+      <Box paddingHorizontal="l_32" paddingBottom="m_16" flexDirection="row" alignItems="center">
         <Box width={45} height={45} borderRadius="round" overflow="hidden" marginRight="m_16">
           <Image
             source={{
@@ -96,6 +101,14 @@ export const MainPageScreen = () => {
         renderItem={({ item }) => <RecipeSections section={item} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['orange']}
+            tintColor="orange"
+          />
+        }
         ListFooterComponent={
           <Box padding="m_16" alignItems="center" marginBottom="xl_64">
             <TouchableOpacity

@@ -106,7 +106,10 @@ export default function RootLayout() {
       </Animated.View>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <Stack />
+          <Stack>
+            <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
+            <Stack />
+          </Stack>
         </ThemeProvider>
       </QueryClientProvider>
     </>
