@@ -24,5 +24,44 @@ export const api = {
     const response = await fetch(`${BASE_URL}/lookup.php?i=${id}`);
     const data: MealDBResponse = await response.json();
     return data.meals?.[0] ? addPriceToRecipe(data.meals[0]) : null;
+  },
+
+  searchMeals: async (query: string): Promise<Recipe[]> => {
+    try {
+      const response = await fetch(`${BASE_URL}/search.php?s=${query}`);
+      const data: MealDBResponse = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      return data.meals.map(meal => addPriceToRecipe(meal));
+    } catch (error) {
+      console.error('Error searching meals:', error);
+      return [];
+    }
+  },
+  
+  // Get meal suggestions based on a partial search query
+  getMealSuggestions: async (query: string): Promise<Recipe[]> => {
+    try {
+      // Return empty array for empty queries
+      if (!query.trim()) {
+        return [];
+      }
+      
+      const response = await fetch(`${BASE_URL}/search.php?s=${query}`);
+      const data: MealDBResponse = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      // Return only the first 5 suggestions to avoid cluttering the UI
+      return data.meals.slice(0, 5).map(meal => addPriceToRecipe(meal));
+    } catch (error) {
+      console.error('Error getting meal suggestions:', error);
+      return [];
+    }
   }
 };
